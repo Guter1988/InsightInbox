@@ -1,4 +1,4 @@
-# FusionTek - Feedback Analysis Platform
+# InsightInbox - Feedback Analysis Platform
 
 A robust, multilingual feedback analysis system powered by a local LLM (Ollama).
 

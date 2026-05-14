@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback Details | FusionTek</title>
+    <title>Feedback Details | InsightInbox</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -112,7 +112,7 @@
         async function loadDetails() {
             if (!id) return;
             try {
-                const res = await fetch(\`/feedback/\${id}\`);
+                const res = await fetch(`/feedback/${id}`);
                 if (!res.ok) throw new Error('Not found');
                 const item = await res.json();
 
@@ -130,7 +130,7 @@
                     analysis.feature_requests.forEach(f => {
                         const span = document.createElement('span');
                         span.className = 'feature-tag';
-                        span.textContent = \`\${f.title} (conf: \${Math.round(f.confidence * 100)}%)\`;
+                        span.textContent = `${f.title} (conf: ${Math.round(f.confidence * 100)}%)`;
                         featuresDiv.appendChild(span);
                     });
                 } else {

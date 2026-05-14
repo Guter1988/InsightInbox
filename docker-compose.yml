@@ -1,9 +1,7 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:latest
-    container_name: fusiontek-db
+    container_name: insight-inbox-db
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
@@ -13,6 +11,7 @@ services:
       - "5432:5432"
     volumes:
       - ./sql:/docker-entrypoint-initdb.d
+      - db_data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d feedback_db"]
       interval: 10s
@@ -21,37 +20,20 @@ services:
 
   api:
     build: .
-    container_name: fusiontek-api
+    container_name: insight-inbox-api
     restart: always
     ports:
       - "3000:3000"
     environment:
       PORT: 3000
       DATABASE_URL: postgres://postgres:postgres@db:5432/feedback_db
-      OLLAMA_URL: http://ollama:11434
-      MODEL_NAME: llama3.1
+      OLLAMA_URL: http://host.docker.internal:11434
+      MODEL_NAME: gemma4
       NODE_ENV: production
     depends_on:
       db:
         condition: service_healthy
-      ollama:
-        condition: service_started
-
-  ollama:
-    image: ollama/ollama:latest
-    container_name: fusiontek-ollama
-    restart: always
-    volumes:
-      - ollama_data:/root/.ollama
-    ports:
-      - "11434:11434"
-
-  ollama-init:
-    image: curlimages/curl:latest
-    container_name: fusiontek-ollama-init
-    depends_on:
-      - ollama
-    entrypoint: [ "sh", "-c", "sleep 5 && curl -X POST http://ollama:11434/api/pull -d '{\"name\": \"llama3.1\"}'" ]
 
 volumes:
-  ollama_data:
+  db_data: # Adding a volume for DB persistence since we are cleaning up volumes
+

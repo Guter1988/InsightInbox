@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FusionTek | Feedback Analysis</title>
+    <title>InsightInbox | Feedback Analysis</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -96,7 +96,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>FusionTek</h1>
+            <h1>InsightInbox</h1>
             <p style="color: var(--text-dim)">Multilingual AI Feedback Analysis System</p>
         </header>
 
@@ -175,7 +175,12 @@
                 if (res.ok) {
                     input.value = '';
                     fetchFeedbacks();
+                } else {
+                    const err = await res.json();
+                    alert('Error submitting feedback: ' + (err.error || res.statusText));
                 }
+            } catch (e) {
+                alert('Network error: ' + e.message);
             } finally {
                 submitBtn.disabled = false;
             }
@@ -183,18 +188,18 @@
 
         // Websocket
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const ws = new WebSocket(\`\${protocol}//\${window.location.host}/ws\`);
+        const ws = new WebSocket(`${protocol}//${window.location.host}/ws`);
 
         ws.onmessage = (event) => {
             const update = JSON.parse(event.data);
-            const row = document.getElementById(\`row-\${update.id}\`);
+            const row = document.getElementById(`row-${update.id}`);
             if (row) {
-                const statusSpan = row.querySelector(\`#status-\${update.id}\`);
+                const statusSpan = row.querySelector(`#status-${update.id}`);
                 statusSpan.textContent = update.status;
-                statusSpan.className = \`status status-\${update.status.toLowerCase()}\`;
+                statusSpan.className = `status status-${update.status.toLowerCase()}`;
                 
-                row.querySelector(\`#sentiment-\${update.id}\`).textContent = update.sentiment;
-                row.querySelector(\`#group-\${update.id}\`).textContent = update.group;
+                row.querySelector(`#sentiment-${update.id}`).textContent = update.sentiment;
+                row.querySelector(`#group-${update.id}`).textContent = update.group;
             } else {
                 fetchFeedbacks();
             }

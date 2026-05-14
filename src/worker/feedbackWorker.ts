@@ -52,8 +52,7 @@ export class FeedbackWorker {
       } else {
         const nextRetry = item.retry_count + 1;
         await this.repo.update(item.id, { 
-          retry_count: nextRetry,
-          updated_at: new Date()
+          retry_count: nextRetry
         });
         
         console.log(`[WORKER] Retrying feedback ${item.id} (attempt ${nextRetry}/${config.maxRetries})`);

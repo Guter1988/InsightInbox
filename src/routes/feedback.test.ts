@@ -27,39 +27,39 @@ describe('Feedback Routes Validation', () => {
   it('should accept feedback containing script tags (safe storage policy)', async () => {
     const { db } = await import('../db.js');
     (db.query as any).mockResolvedValueOnce({
-      rows: [{ id: 1, text: 'Hello <script>alert(1)</script>', status: 'RECEIVED' }]
+      rows: [{ id: 1, content: 'Hello <script>alert(1)</script>', status: 'RECEIVED' }]
     });
 
     const response = await app.inject({
       method: 'POST',
       url: '/feedback',
       payload: {
-        text: 'Hello <script>alert(1)</script>',
+        content: 'Hello <script>alert(1)</script>',
       },
     });
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body);
-    expect(body.text).toBe('Hello <script>alert(1)</script>');
+    expect(body.content).toBe('Hello <script>alert(1)</script>');
   });
 
   it('should accept feedback containing HTML tags (safe storage policy)', async () => {
     const { db } = await import('../db.js');
     (db.query as any).mockResolvedValueOnce({
-      rows: [{ id: 1, text: 'Hello <div>content</div>', status: 'RECEIVED' }]
+      rows: [{ id: 1, content: 'Hello <div>content</div>', status: 'RECEIVED' }]
     });
 
     const response = await app.inject({
       method: 'POST',
       url: '/feedback',
       payload: {
-        text: 'Hello <div>content</div>',
+        content: 'Hello <div>content</div>',
       },
     });
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body);
-    expect(body.text).toBe('Hello <div>content</div>');
+    expect(body.content).toBe('Hello <div>content</div>');
   });
 
   it('should return 200 for clean feedback text', async () => {
@@ -67,7 +67,7 @@ describe('Feedback Routes Validation', () => {
     (db.query as any).mockResolvedValueOnce({
       rows: [{
         id: 1,
-        text: 'Excellent product!',
+        content: 'Excellent product!',
         status: 'RECEIVED',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -80,12 +80,12 @@ describe('Feedback Routes Validation', () => {
       method: 'POST',
       url: '/feedback',
       payload: {
-        text: 'Excellent product!',
+        content: 'Excellent product!',
       },
     });
 
     expect(response.statusCode).toBe(200);
     const body = JSON.parse(response.body);
-    expect(body.text).toBe('Excellent product!');
+    expect(body.content).toBe('Excellent product!');
   });
 });

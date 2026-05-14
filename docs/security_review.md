@@ -1,6 +1,6 @@
 # Security Review & AI Guardrails Implementation
 
-This report details the security analysis and the practical guardrails implemented to harden the FusionTek feedback analysis platform.
+This report details the security analysis and the practical guardrails implemented to harden the InsightInbox feedback analysis platform.
 
 ## 1. Security Review
 

@@ -23,7 +23,7 @@ export async function buildApp() {
 
   // Websocket
   app.get('/ws', { websocket: true }, (connection, req) => {
-    WebsocketHub.getInstance().addClient(connection.socket);
+    WebsocketHub.getInstance().addClient((connection as any).socket);
     console.log('New WS connection established');
   });
 

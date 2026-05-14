@@ -55,7 +55,7 @@ export class FeedbackRepository {
     const setClause = keys.map((k, i) => `${k} = $${i + 2}`).join(', ');
     
     const res = await pool.query(
-      `UPDATE feedback SET ${setClause}, updated_at = NOW() WHERE id = $1 RETURNING *`,
+      `UPDATE feedback SET ${setClause} WHERE id = $1 RETURNING *`,
       [id, ...values]
     );
     return res.rows[0];
